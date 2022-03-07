@@ -1,0 +1,93 @@
+Spring Lifecycle init() and destroy() using Interface
+======================================================
+interface name 
+1) InitializingBean
+2) DisposableBean
+---------------------------------------------------------------------
+
+Student.java
+------------
+
+package com.springcore.lifecycleap;
+
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+
+public class Student implements InitializingBean, DisposableBean{
+	private int id;
+	
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	
+	
+	public Student() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public String toString() {
+		return "Student [id=" + id + "]";
+	}
+
+	@Override
+	public void destroy() throws Exception {
+		// TODO Auto-generated method stub
+		System.out.println("destroy");
+		
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		// TODO Auto-generated method stub
+		System.out.println("init");
+		
+	}
+
+}
+
+
+config.xml
+------------
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans.xsd">
+ 
+ 		<bean class="com.springcore.lifecycleap.Student" name="student">
+ 			<property name="id" value="1001"/>
+ 		</bean>	
+ 	
+</beans>
+
+
+
+Test.java
+-----------
+
+package com.springcore.lifecycleap;
+
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class Test {
+
+	public static void main(String[] args) {
+		AbstractApplicationContext context = new ClassPathXmlApplicationContext("com/springcore/lifecycleap/config.xml");
+		context.registerShutdownHook();
+		Student s=(Student) context.getBean("student");
+		System.out.println(s);
+	}
+
+}
+
+
